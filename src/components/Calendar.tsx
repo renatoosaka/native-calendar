@@ -87,6 +87,7 @@ const Calendar: React.FC<CalendarProsp> = ({
   );
 
   const selectedMonthText = useMemo(() => monthNames[selectedMonth], [
+    monthNames,
     selectedMonth,
   ]);
 
