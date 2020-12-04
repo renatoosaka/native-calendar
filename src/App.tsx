@@ -11,6 +11,7 @@ const App: React.FC = () => {
           weekDays: [0, 6],
           days: [new Date(2020, 11, 8)],
         }}
+        onSelectDate={(date) => console.log(date.toString())}
       />
     </View>
   );

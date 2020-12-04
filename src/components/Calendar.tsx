@@ -40,10 +40,13 @@ interface CalendarProsp {
     weekDays?: Array<number>;
     days?: Array<Date>;
   };
+
+  onSelectDate?: (date: Date) => void;
 }
 
 const Calendar: React.FC<CalendarProsp> = ({
   disableDays = {weekDays: [], days: []},
+  onSelectDate,
 }) => {
   const [containerWidth, setContainerWidth] = useState(CONTAINER_WIDTH);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -144,8 +147,12 @@ const Calendar: React.FC<CalendarProsp> = ({
       }
 
       setSelectedDay(day);
+
+      if (onSelectDate) {
+        onSelectDate(new Date(selectedYear, selectedMonth, day));
+      }
     },
-    [isDisabledDay],
+    [isDisabledDay, onSelectDate, selectedMonth, selectedYear],
   );
 
   return (
