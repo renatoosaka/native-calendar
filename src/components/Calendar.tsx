@@ -192,6 +192,7 @@ const Calendar: React.FC<CalendarProsp> = ({
                 key={`${day}-${indexDay}-${index}`}
                 style={styles.container}>
                 <TouchableOpacity
+                  activeOpacity={isDisabledDay(indexDay, day) ? 1 : 0.5}
                   style={[
                     styles.dayContainer,
                     {
