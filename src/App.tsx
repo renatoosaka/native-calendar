@@ -8,8 +8,8 @@ const App: React.FC = () => {
     <View style={{flex: 1, padding: 16, backgroundColor: '#ccc'}}>
       <Calendar
         disableDays={{
-          weekDays: [0, 6],
-          days: [new Date(2020, 11, 8)],
+          weekDays: [0],
+          days: [new Date(2020, 11, 8), new Date(2020, 11, 25)],
         }}
         weekNames={['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']}
         monthNames={[

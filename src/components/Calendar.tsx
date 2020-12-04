@@ -204,7 +204,17 @@ const Calendar: React.FC<CalendarProsp> = ({
                     day === selectedDay ? styles.daySelected : [],
                   ]}
                   onPress={() => handleSelectDay(indexDay, day)}>
-                  <Text style={styles.dayText}>{!!day && day}</Text>
+                  <Text
+                    style={[
+                      styles.dayText,
+                      {
+                        color: isDisabledDay(indexDay, day)
+                          ? '#cecece'
+                          : '#3f3f3f',
+                      },
+                    ]}>
+                    {!!day && day}
+                  </Text>
                 </TouchableOpacity>
               </View>
             ))}
