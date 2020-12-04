@@ -18,9 +18,9 @@ const {width} = Dimensions.get('window');
 
 const CONTAINER_WIDTH = width / 7;
 
-const weekNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const defaultWeekNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-const monthNames = [
+const defaultMonthNames = [
   'January',
   'February',
   'March',
@@ -40,12 +40,15 @@ interface CalendarProsp {
     weekDays?: Array<number>;
     days?: Array<Date>;
   };
-
+  weekNames?: Array<string>;
+  monthNames?: Array<string>;
   onSelectDate?: (date: Date) => void;
 }
 
 const Calendar: React.FC<CalendarProsp> = ({
   disableDays = {weekDays: [], days: []},
+  weekNames = defaultWeekNames,
+  monthNames = defaultMonthNames,
   onSelectDate,
 }) => {
   const [containerWidth, setContainerWidth] = useState(CONTAINER_WIDTH);
