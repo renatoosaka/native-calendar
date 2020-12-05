@@ -7,6 +7,7 @@ const App: React.FC = () => {
   return (
     <View style={{flex: 1, padding: 16, backgroundColor: '#ccc'}}>
       <Calendar
+        showPastDate={false}
         disableDays={{
           weekDays: [0],
           days: [new Date(2020, 11, 8), new Date(2020, 11, 25)],

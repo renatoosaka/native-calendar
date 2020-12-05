@@ -42,6 +42,7 @@ interface CalendarProsp {
   };
   weekNames?: Array<string>;
   monthNames?: Array<string>;
+  showPastDate?: boolean;
   onSelectDate?: (date: Date) => void;
 }
 
@@ -49,6 +50,7 @@ const Calendar: React.FC<CalendarProsp> = ({
   disableDays = {weekDays: [], days: []},
   weekNames = defaultWeekNames,
   monthNames = defaultMonthNames,
+  showPastDate = true,
   onSelectDate,
 }) => {
   const [containerWidth, setContainerWidth] = useState(CONTAINER_WIDTH);
@@ -91,6 +93,40 @@ const Calendar: React.FC<CalendarProsp> = ({
     selectedMonth,
   ]);
 
+  const isDisabledDay = useCallback(
+    (weekDay: number, day: number) => {
+      let disabled = false;
+
+      if (disableDays || !showPastDate) {
+        if (disableDays.weekDays) {
+          disabled = disabled || disableDays.weekDays.includes(weekDay);
+        }
+
+        if (disableDays.days) {
+          disabled =
+            disabled ||
+            !!disableDays.days.find(
+              (date) =>
+                date.getDate() === day &&
+                date.getMonth() === selectedMonth &&
+                date.getFullYear() === selectedYear,
+            );
+        }
+
+        if (!showPastDate) {
+          const today = new Date();
+          return (
+            new Date(selectedYear, selectedMonth, day).getTime() <
+            today.setDate(today.getDate() - 1)
+          );
+        }
+      }
+
+      return disabled;
+    },
+    [disableDays, selectedMonth, selectedYear, showPastDate],
+  );
+
   const nextMonth = useCallback(() => {
     if (selectedMonth === 11) {
       setSelectedYear(selectedYear + 1);
@@ -118,31 +154,19 @@ const Calendar: React.FC<CalendarProsp> = ({
     setContainerWidth((layoutWidth - 16) / 7);
   }, []);
 
-  const isDisabledDay = useCallback(
-    (weekDay: number, day: number) => {
-      let disabled = false;
+  const isShowPreviousMonth = useMemo(() => {
+    if (!showPastDate) {
+      const today = new Date();
 
-      if (disableDays) {
-        if (disableDays.weekDays) {
-          disabled = disabled || disableDays.weekDays.includes(weekDay);
-        }
+      return (
+        (selectedMonth > today.getMonth() &&
+          selectedYear === today.getFullYear()) ||
+        selectedYear > today.getFullYear()
+      );
+    }
 
-        if (disableDays.days) {
-          disabled =
-            disabled ||
-            !!disableDays.days.find(
-              (date) =>
-                date.getDate() === day &&
-                date.getMonth() === selectedMonth &&
-                date.getFullYear() === selectedYear,
-            );
-        }
-      }
-
-      return disabled;
-    },
-    [disableDays, selectedMonth, selectedYear],
-  );
+    return true;
+  }, [selectedMonth, selectedYear, showPastDate]);
 
   const handleSelectDay = useCallback(
     (weekDay: number, day: number) => {
@@ -162,9 +186,13 @@ const Calendar: React.FC<CalendarProsp> = ({
   return (
     <View style={styles.calendar} onLayout={handleOnLayout}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerButton} onPress={previousMonth}>
-          <Image source={leftImg} />
-        </TouchableOpacity>
+        {isShowPreviousMonth && (
+          <TouchableOpacity style={styles.headerButton} onPress={previousMonth}>
+            <Image source={leftImg} />
+          </TouchableOpacity>
+        )}
+
+        {!isShowPreviousMonth && <View />}
 
         <Text style={styles.title}>
           {selectedMonthText} {selectedYear}
